@@ -1,0 +1,272 @@
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// mworks 20 length/segment tunnel
+// 
+//
+///////////////////////////////////////////////////////////////////////////////
+var project_path = '/Users/hullglick/Documents/vr_exp_params/'
+
+// Number of animal
+var subjectNum = 0 (
+        persistant = 1
+        )
+
+// Define tunnel paths (Not sure if I should keep this)
+group python_params {
+    //Choose how long tunnel should be
+    var cm_from_reward = 615 (
+        groups = 'Tunnel Parameters'
+    )
+    // Param for passive tunnel
+    var passive_paradigm  = (bool)(1) {
+        groups = 'Tunnel Parameters'
+    }
+    // Param for passive tunnel
+    var disp_grating  = (bool)(1) {
+        groups = 'Tunnel Parameters'
+    }
+    var tunnel_gain = 1 (
+        persistant = 1
+        groups = 'Tunnel Parameters'
+    )
+    // time paused at finish line 
+    var reward_pause =  5  (
+        persistant = 1
+        groups = 'Trial Parameters'        
+    )
+    // how many trials are you expecting
+    var expected_trials = 20 (
+        persistant = 1
+        groups = 'Trial Parameters'         
+    )
+    //what are the proportion of unexpected trials
+    var proportion_trials_unexpected = 0 (
+        persistant = 1
+        groups = 'Trial Parameters'   
+    )
+    
+    // height of tunnel
+    var wall_scale = 8 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // wall z position
+    var wall_z_pos = 4 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // wall x position
+    var wall_x_pos = 0 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // x pos of cylinder (finish line - reward zone)
+    var cylinder_x_pos = 0 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // height of cylinder 
+    var cylinder_z_pos = 10 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // How long grating should be when mouse is passively viewing it (look at independent movement of code)
+    var grating_distortion = 7 (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // whether or not to use tunnel that extends for training
+    var training = (bool)(1) (
+        persistant = 1
+        groups = 'Trial Parameters' 
+    )
+    // start of tunnel (ypos)
+    var lower_bound = -15.0  (
+        persistant = 1
+        groups = 'Tunnel Parameters'        
+    )
+    // where tunnel end is (near blue cylinder)
+    var upper_bound = 350 (
+        persistant = 1
+        groups = 'Trial Parameters' 
+    )
+    // Number of segments (out of 4) to display. this adds tunnel segments
+    var number_segments = 1 (
+        persistant = 1
+        groups = 'Trial Parameters' 
+    )
+    // show square for photodiode 
+    var photodiode_present = (bool)(1) (
+        persistant = 1
+        groups = 'Photodiode Parameters'
+    )
+    // x size of screen for photodiode
+    var photodiode_size_x = 0.949 (
+        persistant = 1
+        groups = 'Photodiode Parameters'
+    )
+// y size of screen for photodiode
+    var photodiode_size_y = 0.16 (
+        persistant = 1
+        groups = 'Photodiode Parameters'
+    )
+// left or right corner in tunnel for photodiode
+    var photodiode_left_right_corner = 1 (
+        persistant = 1
+        groups = 'Photodiode Parameters'
+    )
+// top or bottom corner in tunnel for photodiode
+    var photodiode_top_bottom_corner = 0 (
+        persistant = 1
+        groups = 'Photodiode Parameters'
+    )
+}
+
+// Define vars used for labjack
+group labjack_vars {
+    // wheel
+    var quadrature = 0 (
+        groups = 'Labjack'
+    )
+    // not sure why but this needs to be defined
+    var led = 0  (
+        persistant = 1
+        groups = 'Labjack'
+    )
+    // How long to run experiment/trial
+    var timer_duration = 50 * 60s (
+        persistant = 1
+        groups = 'Labjack'
+    )
+    // How long to pause expeiriment to help mworks from overloading. Also wheel smoothness related
+    var wait_time = 0.001s (
+        persistant = 1
+        groups = 'Labjack'
+    )
+     // used for checking if keller_client received trigger from keller_server_training
+    var py_juice_trigger = 'False' (
+        groups = 'Labjack'
+    )
+    //variable that updates when mouse enters and exits a grating/reward zone 
+    var zone_entry_exit_status = '' (
+        groups = 'Labjack'
+    )
+    //variable that updates when block changes
+    var block_status = '' (
+        groups = 'Labjack'
+    )
+    //variable that determines if this is a manipulation session
+    var experimental_flag = (bool)(0) (
+        groups = 'Labjack'
+    ) 
+
+    //variable that determines that type of manipulaiton
+    var session_type = 'B4' (
+        groups = 'Labjack'
+    ) 
+        
+    //solenoid 30 to 100msec make units of juice in micro
+    var reward = 30ms (
+        groups = 'Labjack'
+    )
+    // for lick sensor
+    var counter2 = 0 (
+        groups = 'Labjack'
+    )
+    // for scanbox sync?
+    var counter = 0 (
+        groups = 'Labjack'
+    )
+    // reward duration 
+    var reward_solenoid_duration = 50ms (
+        persistant = 1
+        groups = 'Labjack'
+    )
+    // get mouse position
+    var mouse_pos = 'No data' (
+        groups = 'Labjack'
+    )
+   //Boolean for using timer
+   var use_timer = (bool)(0)(
+      persistant = 1
+      groups = 'Labjack'
+   )
+}
+
+// trial_params
+var trial = 1 
+var session_end = 141
+
+// print vars
+var last_counter2_value = 0
+
+// labjack set up
+iodevice/labjacku6 LabJackU6 (
+    pulse_duration = reward // reward_duration
+    pulse_on = reward // reward_on
+    quadrature = quadrature
+	counter2 = counter2
+    counter=counter
+    )
+
+// Run python client (Access functions for experiment) Also common point of failure
+resource/python_file()
+
+// mworks expeirment and protocol
+experiment 'prediction_error_vr' {
+      protocol 'vr_protocol' {
+            // Create params json
+            run_python_string("create_params_json()")
+            // start python server
+            run_python_string("process = start_server()")
+            // wait 5 seconds
+            wait(5s)
+            // Start labjack device
+             start_io_device(LabJackU6)
+            if (use_timer){
+                // Start experiment timer (might not need this)
+                start_timer (timer = "experiment_timer"; duration = timer_duration)
+                while (timer_expired(experiment_timer) == 0) {
+                    run_python_string("send_command_to_queue(getvar('quadrature'))")
+                    wait(wait_time)
+                    if (py_juice_trigger == 'True'){
+                            py_juice_trigger = 'False'
+                            reward = reward_solenoid_duration
+                            trial = trial + 1
+                            report(message = "Current Trial = $trial")
+                    }
+                    // report when there is a lick
+                    if (counter2 > last_counter2_value){
+                            report(message = "lick detected")
+                            last_counter2_value = last_counter2_value + 1
+                    }
+            }
+        // close server when timer ends
+        run_python_string("close_server()")
+        //stop labjack
+        stop_io_device(LabJackU6)
+        }
+        else {
+            while(TRUE){
+            run_python_string("send_command_to_queue(getvar('quadrature'))")
+            wait(wait_time)
+            if (py_juice_trigger == 'True'){
+                    py_juice_trigger = 'False'
+                    reward = reward_solenoid_duration
+                    trial = trial + 1
+                    report(message = "Current Trial = $trial")
+            }
+            // report when there is a lick
+            if (counter2 > last_counter2_value){
+                    report(message = "lick detected")
+                    last_counter2_value = last_counter2_value + 1
+            }
+            // End session if trial 141 is reached
+            if(trial == session_end){
+                run_python_string("close_server()")
+            }
+          }
+        }
+     }
+}

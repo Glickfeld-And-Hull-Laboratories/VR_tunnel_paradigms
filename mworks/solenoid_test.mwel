@@ -1,0 +1,40 @@
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// solenoid and reward testing
+// 
+//
+///////////////////////////////////////////////////////////////////////////////
+
+// varrs used for labjack
+var quadrature = 0
+var led = 0 // not sure why but this needs to be defined
+var reward = 0 //solenoid 30 to 100msec make units of juice in micro
+var timer_duration = 5*60s
+var wait_time = 1s
+var counter2 = 0
+var reward_duration = 500ms
+var solenoid_runs = 0
+
+iodevice/labjacku6 LabJackU6 (
+    pulse_duration = reward 
+    pulse_on = reward 
+    quadrature = quadrature
+    counter2 = counter2
+    )
+  
+
+experiment 'solenoid_test' {
+	  protocol 'solenoid_trigger' {
+	  	  	 start_io_device(LabJackU6)
+             start_timer (timer = "experiment_timer"; duration = timer_duration)
+              while (timer_expired(experiment_timer) == 0) {
+	  		        reward =  reward_duration 	
+                    solenoid_runs = solenoid_runs + 1
+                    report(message = 'solenoid counter $solenoid_runs')
+                    wait(wait_time)
+
+       }
+            stop_io_device(LabJackU6)
+	 }
+}

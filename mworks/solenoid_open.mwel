@@ -1,0 +1,27 @@
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  open solenoid
+// 
+//
+///////////////////////////////////////////////////////////////////////////////
+
+// varrs used for labjack
+var led = 0 // not sure why but this needs to be defined
+var reward = 0 //solenoid 30 to 100msec make units of juice in micro
+var timer_duration = 4 * 60s
+var reward_duration = timer_duration
+
+iodevice/labjacku6 LabJackU6 (
+    pulse_duration = reward 
+    pulse_on = reward 
+    )
+  
+
+experiment 'solenoid_test' {
+	  protocol 'solenoid_trigger' {
+	  	  	 start_io_device(LabJackU6)
+	  		 reward =  reward_duration	
+	         stop_io_device(LabJackU6)
+	 }
+}
