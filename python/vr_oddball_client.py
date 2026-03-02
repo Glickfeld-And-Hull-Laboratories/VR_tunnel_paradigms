@@ -29,8 +29,14 @@ home_dir = os.path.expanduser("~")
 # expected path is /user/documents/vr_exp_params
 exp_params_path = home_dir + '/' + 'Documents/' + 'vr_exp_params/'
 
+#Repo path
+repo_path = home_dir + '/Repositories/VR_tunnel_paradigms/'
+
+# Expected path for path params json
+p_params = repo_path + 'params/path_hardware_params.json'
+
 #Grab path params (json needs to be created in before script can run)
-with open(exp_params_path + 'path_hardware_params', 'r') as f:
+with open(p_params, 'r') as f:
     path_hardware_params = json.load(f)
 
 oddball_tunnel_path = path_hardware_params['python_2_oddball_server_path']
@@ -313,5 +319,6 @@ def block_check():
             print(block_status)
         except socket.timeout:
             pass
-
-threading.Thread(target = block_check).start()
+#Check if this is an experimental session (Allows for block signals to be sent)
+if getvar('experimental_flag'):
+    threading.Thread(target = block_check).start()

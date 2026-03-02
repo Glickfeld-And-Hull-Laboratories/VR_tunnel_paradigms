@@ -85,6 +85,15 @@ home_dir = os.path.expanduser("~")
 # expected path is /user/documents/vr_exp_params
 exp_params_path = home_dir + '/' + 'Documents/' + 'vr_exp_params/'
 
+#Repo path
+repo_path = home_dir + '/Repositories/VR_tunnel_paradigms/'
+
+# Expected path for path params json
+p_params = repo_path + 'params/path_hardware_params.json'
+
+#Path for block assignments
+block_assignment_path = repo_path + 'python/block1_trial_assignments.csv'
+
 #Get files in proj dir
 files = os.listdir(exp_params_path)
 
@@ -110,7 +119,7 @@ for x in exp_params.items():
     unicode_encode(x)
 
 #Grab path params (json needs to be created in before script can run)
-with open(exp_params_path + 'path_hardware_params', 'r') as f:
+with open(p_params, 'r') as f:
     path_hardware_params = json.load(f)
 
 #Path to tunnel images, libraries, and params (automate this)
@@ -230,7 +239,7 @@ quadrature_queue = deque()
 #Define movement queue
 movement_queue = deque()
 
-#Bound limits (make sure mouse cant go above or below tunnel)
+#Tunnel limits
 upper_bound = exp_params['upper_bound'] #390 # Not defined for 
 lower_bound = exp_params['lower_bound'] #-15.0
 
@@ -302,7 +311,7 @@ block2 = 40 #(20 trials are early for unexpected decay and 20 are late for senso
 
 if experimental_flag:
     #Import assignment data for block 1 (based on 100 trials with p = .15)
-    block1_trial_assignment = pd.read_csv(home_dir + '/Documents/VR_tunnel_paradigms/python/block1_trial_assignments.csv') #automate parent directory (Should exist in a particular location regardless of computer)
+    block1_trial_assignment = pd.read_csv(block_assignment_path) #automate parent directory (Should exist in a particular location regardless of computer)
 
     #Get number of assignments possibilities
     nrows = block1_trial_assignment.shape[0]
@@ -868,7 +877,7 @@ class MyApp(ShowBase):
         b=a[1]+speed
 
         #trial expected/unexpected status
-        if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status:
+        if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status and experimental_flag:
             if self.trial_binom_assignment[self.curr_trial - 1]:
                 global unexp_status
                 unexp_status = '- unexpected'
@@ -909,8 +918,9 @@ class MyApp(ShowBase):
                 a=self.camNP.getPos()
                 b=a[1]+speed
 
-                #Send block status update to mworks
-                threading.Thread(target=self.block_status_trigger).start()  
+                #Send block status update to mworks (If during expeirment)
+                if experimental_flag:
+                    threading.Thread(target=self.block_status_trigger).start()  
                 #Incriment trial              
                 self.curr_trial += 1                
 
@@ -1133,7 +1143,7 @@ class MyApp(ShowBase):
             movement = int(movement_queue.popleft()) # Get oldest movement
             
             #trial expected/unexpected status
-            if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status:
+            if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status and experimental_flag:
                 if self.trial_binom_assignment[self.curr_trial - 1]:
                     global unexp_status
                     unexp_status = '- unexpected'
@@ -1194,7 +1204,8 @@ class MyApp(ShowBase):
                     self.curr_trial += 1
 
                     #Send block status update to mworks
-                    threading.Thread(target=self.block_status_trigger).start()
+                    if experimental_flag:
+                        threading.Thread(target=self.block_status_trigger).start()
 
                     #reset tunnel
                     self.start_trial_change_stim_reset()

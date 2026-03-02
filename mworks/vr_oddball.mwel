@@ -19,13 +19,13 @@ group python_params {
         groups = 'Tunnel Parameters'
     )
     // Param for passive tunnel
-    var passive_paradigm  = (bool)(1) {
+    var passive_paradigm  = (bool)(1) (
         groups = 'Tunnel Parameters'
-    }
+    )
     // Param for passive tunnel
-    var disp_grating  = (bool)(1) {
+    var disp_grating  = (bool)(1) (
         groups = 'Tunnel Parameters'
-    }
+    )
     var tunnel_gain = 1 (
         persistant = 1
         groups = 'Tunnel Parameters'
