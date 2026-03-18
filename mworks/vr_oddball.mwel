@@ -17,13 +17,21 @@ group python_params {
     //Choose how long tunnel should be
     var cm_from_reward = 615 (
         groups = 'Tunnel Parameters'
+        persistant = 1
+    )
+    // Param for random iti
+    var random_iti_flag  = (bool)(0) (
+        groups = 'Tunnel Parameters'
+        persistant = 1
     )
     // Param for passive tunnel
     var passive_paradigm  = (bool)(1) (
+        persistant = 1
         groups = 'Tunnel Parameters'
     )
     // Param for passive tunnel
     var disp_grating  = (bool)(1) (
+        persistant = 1
         groups = 'Tunnel Parameters'
     )
     var tunnel_gain = 1 (

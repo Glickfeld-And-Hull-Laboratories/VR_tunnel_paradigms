@@ -127,7 +127,8 @@ def create_params_json():
         'session_type': getvar('session_type'),
         'disp_grating': getvar('disp_grating'),
         'passive_paradigm': getvar('passive_paradigm'),
-        'cm_from_reward': getvar('cm_from_reward')
+        'cm_from_reward': getvar('cm_from_reward'),
+        'random_iti_flag': getvar('random_iti_flag')
     }
 
     # path to store yaml configs

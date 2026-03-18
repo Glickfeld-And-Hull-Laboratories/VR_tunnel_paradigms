@@ -257,6 +257,9 @@ cylinder_z_pos = exp_params['cylinder_z_pos'] #10
 #reward pause (in seconds)
 reward_pause = exp_params['reward_pause'] #0
 
+#iti flag
+random_iti_flag = exp_params['random_iti_flag']
+
 #Define ports (These are used for communicating with client and setting vars in mworks)
 quadrature_port = 12345
 juice_port =12346
@@ -374,6 +377,16 @@ if experimental_flag:
 else:
     #If condition is not selected make it B4 for normal tunnel
     session_type = 'B4'
+
+
+########################
+
+# ITI randomization
+
+########################
+bound = 3
+avg_iti = 5
+iti_set = [x for x in range(avg_iti - bound, avg_iti + bound + 1)]
 
 
 ########################
@@ -903,6 +916,10 @@ class MyApp(ShowBase):
 
                 #Let solenoid run on seperate thread
                 threading.Thread(target = self.reward_juice_trigger).start()
+
+                #set iti
+                if random_iti_flag:
+                    self.reward_pause = np.random.choice(iti_set)
 
                 #Store last reard time
                 self.get_last_reward_time()
