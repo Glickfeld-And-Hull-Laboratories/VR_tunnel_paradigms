@@ -166,11 +166,13 @@ group labjack_vars {
     )
     //variable that determines if this is a manipulation session
     var experimental_flag = (bool)(0) (
+        persistant = 1
         groups = 'Labjack'
     ) 
 
     //variable that determines that type of manipulaiton
     var session_type = 'B4' (
+        persistant = 1
         groups = 'Labjack'
     ) 
         

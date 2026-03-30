@@ -297,9 +297,6 @@ experimental_flag = exp_params['experimental_flag']
 #Get cm from reward
 cm_from_reward = exp_params['cm_from_reward']
 
-#Initialize unexpected status to false
-unexp_status = ''
-
 ########################
 
 # Unexpected trials variables/block structure
@@ -403,10 +400,10 @@ class MyApp(ShowBase):
               
         #Define window properties
         props = WindowProperties()
-        props.setCursorHidden(False)
+        props.setCursorHidden(True)
         props.setSize(total_monitor_width, total_monitor_height) #total_monitor_width, total_monitor_height
-        props.setFullscreen(False)
-        props.setUndecorated(False)
+        props.setFullscreen(True)
+        props.setUndecorated(True)
         self.win.requestProperties(props)
         print(self.win.getProperties())
 
@@ -890,7 +887,7 @@ class MyApp(ShowBase):
         b=a[1]+speed
 
         #trial expected/unexpected status
-        if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status and experimental_flag:
+        if self.curr_trial >= block1_start and self.curr_trial <= block1 and experimental_flag:
             if self.trial_binom_assignment[self.curr_trial - 1]:
                 global unexp_status
                 unexp_status = '- unexpected'
@@ -1160,7 +1157,7 @@ class MyApp(ShowBase):
             movement = int(movement_queue.popleft()) # Get oldest movement
             
             #trial expected/unexpected status
-            if self.curr_trial >= block1_start and self.curr_trial <= block1 and unexp_status and experimental_flag:
+            if self.curr_trial >= block1_start and self.curr_trial <= block1 and experimental_flag:
                 if self.trial_binom_assignment[self.curr_trial - 1]:
                     global unexp_status
                     unexp_status = '- unexpected'
